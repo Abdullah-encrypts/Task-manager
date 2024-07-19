@@ -5,33 +5,39 @@ const databaseName = "task-manager";
 
 async function run() {
   try {
-    const client = await MongoClient.connect(connectionURL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const client = await MongoClient.connect(connectionURL);
     console.log("Connected Successfully!");
     const db = client.db(databaseName);
 
-    try {
-      const user = await db
-        .collection("tasks")
-        .findOne({ _id: new ObjectId("6694f3a542c55de6fcad3b79") });
-      console.log(user);
-    } catch (error) {
-      console.error("Error finding task by ID:", error);
-    }
+    // db.collection("users")
+    //   .insertMany([{
+    //     name: 'Abdullah',
+    //     age: 21
+    //   }, {
+    //     name: 'Ahsan',
+    //     age: 25
+    //   }])
+    //   .then((result) => {
+    //     console.log(result);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
 
-    try {
-      const users = await db
-        .collection("tasks")
-        .find({ completed: false })
-        .toArray();
-      console.log(users);
-    } catch (error) {
-      console.error("Error finding tasks:", error);
-    }
+    db.collection("tasks")
+      .deleteOne({
+        description: "have 4 glasses of water",
+      })
+      .then((result) => {
+        console.log("Successfully deleted!", result);
+      })
+      .catch((e) => {
+        "Some Issue here!", e;
+      });
 
-    client.close();
+    setTimeout(() => {
+      client.close();
+    }, 2000);
   } catch (error) {
     console.error("Unable to connect to database:", error);
   }
